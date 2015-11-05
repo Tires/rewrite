@@ -42,7 +42,7 @@
     <dependency>
       <groupId>org.ocpsoft.rewrite</groupId>
       <artifactId>rewrite-api</artifactId>
-      <version>3.0.0.Alpha10</version>
+      <version>3.0.0-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -58,13 +58,13 @@
     <dependency>
       <groupId>org.ocpsoft.rewrite</groupId>
       <artifactId>rewrite-api-el</artifactId>
-      <version>3.0.0.Alpha10</version>
+      <version>3.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.ocpsoft.rewrite</groupId>
       <artifactId>rewrite-api-servlet</artifactId>
-      <version>3.0.0.Alpha10</version>
+      <version>3.0.0-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -76,13 +76,13 @@
     <dependency>
       <groupId>org.ocpsoft.rewrite</groupId>
       <artifactId>rewrite-annotations-impl</artifactId>
-      <version>3.0.0.Alpha10</version>
+      <version>3.0.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.ocpsoft.rewrite</groupId>
       <artifactId>rewrite-integration-faces</artifactId>
-      <version>3.0.0.Alpha10</version>
+      <version>3.0.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -118,7 +118,7 @@
     <dependency>
       <groupId>org.ocpsoft.rewrite</groupId>
       <artifactId>rewrite-test-harness</artifactId>
-      <version>3.0.0.Alpha10</version>
+      <version>3.0.0-SNAPSHOT</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
