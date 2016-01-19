@@ -61,6 +61,21 @@ public class AddressBuilder
    {
       if (address == null)
       {
+         address = new ParameterizedAddressResult(this);
+      }
+      return address;
+   }
+
+   /**
+    * Generate an {@link Address} representing the current literal state of this {@link AddressBuilder}.
+    * <p>
+    * (Does not apply parameterization. E.g. The URL `/{foo}` will be treated as literal text, as opposed to calling
+    * {@link #build()}, which would result in `foo` being treated as a parameterized expression)
+    */
+   protected Address buildLiteral()
+   {
+      if (address == null)
+      {
          address = new AddressResult(this);
       }
       return address;
@@ -79,11 +94,39 @@ public class AddressBuilder
          URI u = new URI(url);
          String scheme = u.getScheme();
          String host = u.getHost();
-         if(scheme != null && host == null)
-            return AddressBuilder.begin().scheme(u.getScheme()).schemeSpecificPart(u.getRawSchemeSpecificPart()).build();
+         if (scheme != null && host == null)
+            return AddressBuilder.begin().scheme(u.getScheme()).schemeSpecificPart(u.getRawSchemeSpecificPart())
+                     .build();
          else
-           return AddressBuilder.begin().scheme(scheme).domain(host).port(u.getPort())
-             .pathEncoded(u.getRawPath()).queryLiteral(u.getRawQuery()).anchor(u.getRawFragment()).build();
+            return AddressBuilder.begin().scheme(scheme).domain(host).port(u.getPort())
+                     .pathEncoded(u.getRawPath()).queryLiteral(u.getRawQuery()).anchor(u.getRawFragment()).build();
+      }
+      catch (URISyntaxException e) {
+         throw new IllegalArgumentException(
+                  "[" + url + "] is not a valid URL fragment. Consider encoding relevant portions of the URL with ["
+                           + Encoder.class + "]", e);
+      }
+   }
+
+   /**
+    * Create a new {@link Address} from the given fully encoded URL. Improperly formatted or encoded URLs are not
+    * parse-able and will result in an exception.<p>
+    * 
+    * @see http://en.wikipedia.org/wiki/URI_scheme
+    * @throws IllegalArgumentException when the input URL or URL fragment is not valid.
+    */
+   public static Address createLiteral(String url) throws IllegalArgumentException
+   {
+      try {
+         URI u = new URI(url);
+         String scheme = u.getScheme();
+         String host = u.getHost();
+         if (scheme != null && host == null)
+            return AddressBuilder.begin().scheme(u.getScheme()).schemeSpecificPart(u.getRawSchemeSpecificPart())
+                     .buildLiteral();
+         else
+            return AddressBuilder.begin().scheme(scheme).domain(host).port(u.getPort())
+                     .pathEncoded(u.getRawPath()).queryLiteral(u.getRawQuery()).anchor(u.getRawFragment()).buildLiteral();
       }
       catch (URISyntaxException e) {
          throw new IllegalArgumentException(
@@ -273,6 +316,6 @@ public class AddressBuilder
    @Override
    public String toString()
    {
-      return build().toString();
+      return buildLiteral().toString();
    }
 }

@@ -20,7 +20,7 @@ package org.ocpsoft.urlbuilder;
  * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class AddressBuilderScheme
+public class AddressBuilderScheme implements BuildableAddress
 {
    private AddressBuilder parent;
 
@@ -29,12 +29,16 @@ public class AddressBuilderScheme
       this.parent = parent;
    }
 
-   /**
-    * Generate an {@link Address} representing the current state of this {@link AddressBuilder}.
-    */
+   @Override
    public Address build()
    {
       return parent.build();
+   }
+
+   @Override
+   public Address buildLiteral()
+   {
+      return parent.buildLiteral();
    }
 
    /**

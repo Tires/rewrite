@@ -27,7 +27,6 @@ import org.ocpsoft.urlbuilder.util.Encoder;
  */
 class Parameter
 {
-
    private final CharSequence name;
    private final List<Object> values;
    private final boolean encode;

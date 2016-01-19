@@ -178,4 +178,18 @@ public class URLEncodingTest extends RewriteTestBase
       browser.findElement(By.id("submit")).click();
       Assert.assertTrue(browser.getPageSource().contains("viewId=/encoding.xhtml"));
    }
+   
+   @Test
+   public void testBracesAndBracketsInURL() throws Exception
+   {
+      browser.get(getBaseURL() + getContextPath() + "/basic/[]{}");
+      Assert.assertNotNull(browser.findElement(By.id("form")));
+   }
+   
+   @Test
+   public void testBracesAndBracketsInURLEncoded() throws Exception
+   {
+      browser.get(getBaseURL() + getContextPath() + "/basic/%5B%5D%7B%7D");
+      Assert.assertNotNull(browser.findElement(By.id("form")));
+   }
 }

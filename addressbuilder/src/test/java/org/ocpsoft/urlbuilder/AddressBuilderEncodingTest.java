@@ -59,6 +59,7 @@ public class AddressBuilderEncodingTest
                         .path("/{p}")
                         .set("p", "a b")
                         .query("q", "a b")
+                        .build()
                         .toString());
    }
 
@@ -86,6 +87,7 @@ public class AddressBuilderEncodingTest
                         .path("/{p}")
                         .setEncoded("p", "a%20b")
                         .queryEncoded("q", "a+b")
+                        .build()
                         .toString());
    }
 
