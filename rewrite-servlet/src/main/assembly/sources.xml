@@ -12,7 +12,7 @@
    
    <fileSets>
       <fileSet>
-         <directory>${project.basedir}/target/dependency</directory>
+         <directory>${project.basedir}/target/dependency/sources</directory>
          <outputDirectory>/</outputDirectory>
          <useDefaultExcludes>true</useDefaultExcludes>
          <excludes>

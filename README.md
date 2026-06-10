@@ -1,6 +1,8 @@
 Rewrite [![Build Status](https://travis-ci.org/ocpsoft/rewrite.svg?branch=master)](https://travis-ci.org/ocpsoft/rewrite)
 =================================================
 
+[![Join the chat at https://gitter.im/ocpsoft/rewrite](https://badges.gitter.im/ocpsoft/rewrite.svg)](https://gitter.im/ocpsoft/rewrite?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A highly configurable URL-rewriting tool for Java EE 6+ and Servlet 2.5+ applications, supporting integration with:
 
  * CDI
@@ -35,6 +37,13 @@ Get Started
            <version>${rewrite.version}</version>
         </dependency>
 
+        Version Reference Table:
+        -------------------------------------
+        Jakarta EE 10 | Rewrite 10.x
+        Jakarta EE 9  | Rewrite 9.x
+        Jakarta EE 8  | Rewrite 8.x
+        Java EE <= 7  | Rewrite 3.x
+
 3. Add a configuration provider implementing the 'org.ocpsoft.rewrite.config.ConfigurationProvider' interface, or extending from the abstract HttpConfigurationProvider class for convenience:
 
         package com.example;
@@ -53,7 +62,7 @@ Get Started
            public Configuration getConfiguration(final ServletContext context)
            {
              return ConfigurationBuilder.begin()
-               .defineRule()
+               .addRule()
                  .when(Direction.isInbound().and(Path.matches("/some/page/{p}/")))
                  .perform(Forward.to("/new-page/{p}.html"));
             }
@@ -65,6 +74,8 @@ Get Started
         ---
         com.example.ExampleConfigurationProvider
 
+Note that your annotated class won't be found, by default, if your ConfigurationProvider is in a jar inside a war. You can either set the servlet parameter `org.ocpsoft.rewrite.annotation.SCAN_LIB_DIRECTORY` to `true`, or use the ServiceLoader approach instead.
+
 5. Add rules to your configuration. Condition objects such as 'Direction.isInbound()' and 'Path.matches(...)' can be found in the 'org.ocpsoft.rewrite.config.*' and 'org.ocpsoft.rewrite.servlet.config.*' packages.
 
 6. Consider using Rewrite extensions for extra power:
@@ -74,6 +85,17 @@ Get Started
    * And more... read the [Documentation](http://ocpsoft.org/rewrite/docs/)
 
 7. Run your application!
+
+BUILDING
+========
+```
+mvn package -PWILDFLY_MANAGED_8
+```
+(Or use any of the other profiles in pom.xml - Note, most seem to be failing right now due to stale maven packages. Pull requests fixing test proviles are appreciated!)
+
+RELEASING
+========
+See https://github.com/ocpsoft/rewrite/wiki/Releasing#current-process
 
 FEEDBACK
 ========

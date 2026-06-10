@@ -57,7 +57,7 @@ public class PrettyConfigurator
       {
          final PrettyConfigBuilder builder = new PrettyConfigBuilder();
 
-         ServiceLoader<ConfigurationProvider> configLoader = ServiceLoader.load(ConfigurationProvider.class);
+         ServiceLoader<ConfigurationProvider> configLoader = ServiceLoader.loadTypesafe(ConfigurationProvider.class);
          for (ConfigurationProvider p : configLoader)
          {
             builder.addFromConfig(p.loadConfiguration(servletContext));
@@ -73,7 +73,7 @@ public class PrettyConfigurator
 
          config = parenting.processConfiguration(servletContext, config);
 
-         ServiceLoader<ConfigurationPostProcessor> postProcessors = ServiceLoader.load(ConfigurationPostProcessor.class);
+         ServiceLoader<ConfigurationPostProcessor> postProcessors = ServiceLoader.loadTypesafe(ConfigurationPostProcessor.class);
          for (ConfigurationPostProcessor p : postProcessors)
          {
             config = p.processConfiguration(servletContext, config);

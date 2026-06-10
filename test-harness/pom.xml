@@ -5,7 +5,7 @@
    <parent>
       <artifactId>rewrite-parent</artifactId>
       <groupId>org.ocpsoft.rewrite</groupId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.5.3-SNAPSHOT</version>
       <relativePath>../</relativePath>
    </parent>
 
@@ -29,7 +29,7 @@
       </dependency>
       <dependency>
          <groupId>org.jboss.spec.javax.servlet</groupId>
-         <artifactId>jboss-servlet-api_2.5_spec</artifactId>
+         <artifactId>jboss-servlet-api_${servlet.spec}_spec</artifactId>
          <scope>provided</scope>
       </dependency>
 
@@ -51,24 +51,9 @@
       <dependency>
          <groupId>org.mockito</groupId>
          <artifactId>mockito-core</artifactId>
-         <version>1.9.5</version>
          <scope>compile</scope>
       </dependency>
 
-      <!-- Exactly these versions are required by Drone -->
-      <dependency>
-         <groupId>org.apache.httpcomponents</groupId>
-         <artifactId>httpclient</artifactId>
-         <version>4.2.1</version>
-         <scope>compile</scope>
-      </dependency>
-      <dependency>
-         <groupId>net.sourceforge.htmlunit</groupId>
-         <artifactId>htmlunit</artifactId>
-         <version>2.12</version>
-         <scope>compile</scope>
-      </dependency>
-      
       <dependency>
          <groupId>org.jboss.shrinkwrap.resolver</groupId>
          <artifactId>shrinkwrap-resolver-api</artifactId>
@@ -99,6 +84,11 @@
          <groupId>org.jboss.arquillian.extension</groupId>
          <artifactId>arquillian-drone-webdriver-depchain</artifactId>
          <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>javax.enterprise</groupId>
+        <artifactId>cdi-api</artifactId>
+        <scope>test</scope>
       </dependency>
    </dependencies>
 </project>

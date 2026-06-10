@@ -15,12 +15,9 @@
  */
 package org.ocpsoft.urlbuilder;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-
-import org.ocpsoft.urlbuilder.util.CaptureType;
-import org.ocpsoft.urlbuilder.util.CapturingGroup;
-import org.ocpsoft.urlbuilder.util.Encoder;
-import org.ocpsoft.urlbuilder.util.ParseTools;
 
 /**
  * Implementation of {@link Address} created by {@link AddressBuilder}.
@@ -37,21 +34,22 @@ class AddressResult implements Address
    private final String query;
    private final String anchor;
    private CharSequence result;
+   private Map<String, List<Object>> queries = Collections.emptyMap();
 
    public AddressResult(AddressBuilder parent)
    {
       if (isSet(parent.scheme))
-         protocol = parameterize(parent.parameters, parent.scheme).toString();
+         protocol = parent.scheme.toString();
       else
          protocol = null;
 
       if (isSet(parent.schemeSpecificPart))
-         schemeSpecificPart = parameterize(parent.parameters, parent.schemeSpecificPart, false).toString();
+         schemeSpecificPart = parent.schemeSpecificPart.toString();
       else
          schemeSpecificPart = null;
 
       if (isSet(parent.domain))
-         host = parameterize(parent.parameters, parent.domain).toString();
+         host = parent.domain.toString();
       else
          host = null;
 
@@ -62,7 +60,7 @@ class AddressResult implements Address
 
       if (isSet(parent.path))
       {
-         CharSequence path = parameterize(parent.parameters, parent.path);
+         CharSequence path = parent.path;
          if (path.charAt(0) != '/')
             path = new StringBuilder('/').append(path);
          this.path = path.toString();
@@ -70,13 +68,15 @@ class AddressResult implements Address
       else
          path = null;
 
-      if (isSet(parent.queries))
+      if (isSet(parent.queries)) {
+         this.queries = Collections.unmodifiableMap(parent.getQueries());
          query = toQuery(parent.queries).toString();
+      }
       else
          query = null;
 
       if (isSetOrEmpty(parent.anchor))
-         anchor = parameterize(parent.parameters, parent.anchor).toString();
+         anchor = parent.anchor.toString();
       else
          anchor = null;
    }
@@ -98,7 +98,7 @@ class AddressResult implements Address
          if (parameter.getValueCount() > 0)
          {
             for (int i = 0; i < parameter.getValueCount(); i++) {
-               String value = parameter.getValueAsQueryParam(i);
+               String value = parameter.getValue(i);
 
                if (value != null)
                   result.append('=').append(value);
@@ -118,93 +118,11 @@ class AddressResult implements Address
    {
       if (this.result == null)
       {
-         StringBuilder result = new StringBuilder();
-
-         if (isSchemeSet())
-            result.append(getScheme()).append(":");
-
-         if (isSchemeSpecificPartSet())
-         {
-           result.append(getSchemeSpecificPart());
-         }
-         else
-         {
-           if (isDomainSet())
-              result.append("//").append(getDomain());
-  
-           if (isPortSet())
-              result.append(":").append(getPort());
-  
-           if (isPathSet())
-              result.append(getPath());
-  
-           if (isQuerySet())
-              result.append('?').append(getQuery());
-  
-           if (isAnchorSet())
-              result.append('#').append(getAnchor());
-         }
-
+         StringBuilder result = AddressBuilder.toString(this);
          this.result = result;
       }
 
       return this.result.toString();
-   }
-
-   private CharSequence parameterize(Map<CharSequence, Parameter> parameters, CharSequence sequence)
-   {
-     return parameterize(parameters, sequence, true);
-   }
-
-   private CharSequence parameterize(Map<CharSequence, Parameter> parameters, CharSequence sequence, boolean encodeSequence)
-   {
-      StringBuilder result = new StringBuilder();
-      int cursor = 0;
-      int lastEnd = 0;
-      while (cursor < sequence.length())
-      {
-         switch (sequence.charAt(cursor))
-         {
-         case '{':
-            CharSequence subSequence = sequence.subSequence(lastEnd, cursor);
-            if(encodeSequence)
-              subSequence = Encoder.path(subSequence);
-            
-            result.append(subSequence);
-
-            int startPos = cursor;
-            CapturingGroup group = ParseTools.balancedCapture(sequence, startPos, sequence.length() - 1,
-                     CaptureType.BRACE);
-            cursor = group.getEnd();
-            lastEnd = group.getEnd() + 1;
-
-            String name = group.getCaptured().toString();
-
-            Parameter parameter = parameters.get(name);
-            if (parameter == null || !parameter.hasValues())
-               throw new IllegalStateException("No parameter [" + name + "] was set in the pattern [" + sequence
-                        + "]. Call address.set(\"" + name + "\", value); or remove the parameter from the pattern.");
-
-            result.append(parameter.getValueAsPathParam(0));
-
-            break;
-
-         default:
-            break;
-         }
-
-         cursor++;
-      }
-
-      if (cursor >= lastEnd)
-      {
-         CharSequence subSequence = sequence.subSequence(lastEnd, cursor);
-         if(encodeSequence)
-            subSequence = Encoder.path(subSequence);
-        
-         result.append(subSequence);
-      }
-      return result;
    }
 
    private boolean isSet(Integer port)
@@ -307,17 +225,23 @@ class AddressResult implements Address
    {
       return schemeSpecificPart;
    }
-   
+
    @Override
    public boolean isSchemeSpecificPartSet()
    {
       return isSet(schemeSpecificPart);
    }
-   
+
    @Override
    public String getQuery()
    {
       return query;
+   }
+
+   @Override
+   public Map<String, List<Object>> getQueryParameters()
+   {
+      return queries;
    }
 
    @Override

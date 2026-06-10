@@ -4,7 +4,7 @@
    <parent>
       <artifactId>rewrite-parent</artifactId>
       <groupId>org.ocpsoft.rewrite</groupId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.5.3-SNAPSHOT</version>
       <relativePath>../</relativePath>
    </parent>
 
@@ -159,6 +159,23 @@
                   </goals>
                   <configuration>
                      <classifier>sources</classifier>
+                     <outputDirectory>${project.build.directory}/dependency/sources</outputDirectory>
+                     <includeGroupIds>
+                        org.ocpsoft.common,org.ocpsoft.logging,org.ocpsoft.rewrite
+                     </includeGroupIds>
+                     <useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
+                     <excludeTransitive>false</excludeTransitive>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>docs</id>
+                  <phase>process-sources</phase>
+                  <goals>
+                     <goal>unpack-dependencies</goal>
+                  </goals>
+                  <configuration>
+                     <classifier>javadoc</classifier>
+                     <outputDirectory>${project.build.directory}/dependency/javadoc</outputDirectory>
                      <includeGroupIds>
                         org.ocpsoft.common,org.ocpsoft.logging,org.ocpsoft.rewrite
                      </includeGroupIds>
@@ -194,6 +211,18 @@
                   <configuration>
                      <descriptors>
                         <descriptor>src/main/assembly/sources.xml</descriptor>
+                     </descriptors>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>assembly-javadoc</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>single</goal>
+                  </goals>
+                  <configuration>
+                     <descriptors>
+                        <descriptor>src/main/assembly/javadocs.xml</descriptor>
                      </descriptors>
                   </configuration>
                </execution>

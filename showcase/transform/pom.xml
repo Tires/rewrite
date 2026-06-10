@@ -5,7 +5,7 @@
    <parent>
       <artifactId>rewrite-showcase</artifactId>
       <groupId>org.ocpsoft.rewrite.showcase</groupId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.5.3-SNAPSHOT</version>
       <relativePath>../</relativePath>
    </parent>
 
@@ -16,7 +16,7 @@
 
       <dependency>
          <groupId>org.jboss.spec</groupId>
-         <artifactId>jboss-javaee-6.0</artifactId>
+         <artifactId>jboss-javaee-${javaee.spec}</artifactId>
          <type>pom</type>
          <scope>provided</scope>
       </dependency>
@@ -41,5 +41,9 @@
          <artifactId>rewrite-transform-minify</artifactId>
       </dependency>
 
+      <dependency>
+        <groupId>org.ocpsoft.rewrite</groupId>
+        <artifactId>rewrite-config-servlet</artifactId>
+      </dependency>
    </dependencies>
 </project>

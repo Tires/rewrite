@@ -49,7 +49,6 @@ import org.ocpsoft.rewrite.servlet.event.OutboundServletRewrite;
 import org.ocpsoft.rewrite.servlet.http.event.HttpServletRewrite;
 import org.ocpsoft.rewrite.servlet.spi.OutboundRewriteProducer;
 import org.ocpsoft.rewrite.servlet.spi.RewriteLifecycleListener;
-import org.ocpsoft.rewrite.servlet.util.URLBuilder;
 import org.ocpsoft.rewrite.spi.RewriteProvider;
 import org.ocpsoft.urlbuilder.Address;
 import org.ocpsoft.urlbuilder.AddressBuilder;
@@ -57,7 +56,6 @@ import org.ocpsoft.urlbuilder.AddressBuilder;
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-@SuppressWarnings("deprecation")
 public class HttpRewriteWrappedResponse extends RewriteWrappedResponse
 {
    private final HttpServletRequest request;
@@ -378,7 +376,7 @@ public class HttpRewriteWrappedResponse extends RewriteWrappedResponse
    @Override
    public String encodeRedirectURL(final String url)
    {
-      Address address = AddressBuilder.create(URLBuilder.createFrom(url).toURL());
+      Address address = AddressBuilder.create(url);
       OutboundServletRewrite<ServletRequest, ServletResponse, Address> event = rewrite(address);
 
       if (event.getFlow().is(ServletRewriteFlow.ABORT_REQUEST))
@@ -391,7 +389,22 @@ public class HttpRewriteWrappedResponse extends RewriteWrappedResponse
    @Override
    public String encodeURL(final String url)
    {
-      Address address = AddressBuilder.create(URLBuilder.createFrom(url).toURL());
+
+      /*
+       * In some situations "url" may be not valid according to the rules defined in the RFC.
+       * In this case AddressBuilder.create() will fail. In these situations we basically
+       * skip outbound rewriting and just return the result of the super class.
+       */
+      Address address;
+      try
+      {
+         address = AddressBuilder.create(url);
+      }
+      catch (IllegalArgumentException e) {
+         log.warn("Skipping outbound rewriting of invalid URL: " + url);
+         return super.encodeURL(url);
+      }
+
       OutboundServletRewrite<ServletRequest, ServletResponse, Address> event = rewrite(address);
 
       if (event.getFlow().is(ServletRewriteFlow.ABORT_REQUEST))
@@ -399,6 +412,7 @@ public class HttpRewriteWrappedResponse extends RewriteWrappedResponse
          return event.getOutboundAddress().toString();
       }
       return super.encodeURL(event.getOutboundAddress().toString());
+
    }
 
    @SuppressWarnings({ "unchecked", "rawtypes" })

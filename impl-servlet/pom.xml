@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.ocpsoft.rewrite</groupId>
       <artifactId>rewrite-parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.5.3-SNAPSHOT</version>
       <relativePath>../</relativePath>
    </parent>
 
@@ -37,7 +37,7 @@
       </dependency>
       <dependency>
          <groupId>org.jboss.spec.javax.servlet</groupId>
-         <artifactId>jboss-servlet-api_2.5_spec</artifactId>
+         <artifactId>jboss-servlet-api_${servlet.spec}_spec</artifactId>
          <scope>provided</scope>
       </dependency>
       <dependency>
